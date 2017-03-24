@@ -33,8 +33,8 @@ public class TaskRepositoryTest {
 		task.setName(TASK_NAME);
 		task.setVersion(version);
 		final LocalDateTime start = LocalDateTime.now();
-		task.setStart(start);
-		task.setEnd(start.plusMinutes(20));
+		task.setStartTime(start);
+		task.setEndTime(start.plusMinutes(20));
 
 		return task;
 	}

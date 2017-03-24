@@ -19,6 +19,10 @@ public class TaskService {
 		return this.taskDao.save(task);
 	}
 
+	public Task createNewTaskJson(final Task task) {
+		return this.taskDao.save(task);
+	}
+
 	public Task findTaskByName(final String taskName) {
 		final List<Task> tasks = this.taskDao.findByNameOrderByVersionDesc(taskName);
 

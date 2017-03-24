@@ -2,25 +2,30 @@ package com.team.icr.task.entity;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Task {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", updatable = false, nullable = false)
 	private long id;
 	private String name;
 	private int version;
-	private LocalDateTime start;
-	private LocalDateTime end;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	@JsonFormat(pattern = "M/d/yyyy, HH:mm:ss")
+	private LocalDateTime startTime;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	@JsonFormat(pattern = "M/d/yyyy, HH:mm:ss")
+	private LocalDateTime endTime;
 
 	public Task() {
 	}
@@ -54,20 +59,20 @@ public class Task {
 		this.version = version;
 	}
 
-	public LocalDateTime getStart() {
-		return this.start;
+	public LocalDateTime getStartTime() {
+		return this.startTime;
 	}
 
-	public void setStart(final LocalDateTime start) {
-		this.start = start;
+	public void setStartTime(final LocalDateTime startTime) {
+		this.startTime = startTime;
 	}
 
-	public LocalDateTime getEnd() {
-		return this.end;
+	public LocalDateTime getEndTime() {
+		return this.endTime;
 	}
 
-	public void setEnd(final LocalDateTime end) {
-		this.end = end;
+	public void setEndTime(final LocalDateTime endTime) {
+		this.endTime = endTime;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.team.icr.task.entity;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -13,7 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-public class Task {
+public class Task implements Comparable<Task> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,6 +27,7 @@ public class Task {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	@JsonFormat(pattern = "M/d/yyyy, HH:mm:ss")
 	private LocalDateTime endTime;
+	private int priority;
 
 	public Task() {
 	}
@@ -75,12 +77,23 @@ public class Task {
 		this.endTime = endTime;
 	}
 
+	public int getPriority() {
+		return this.priority;
+	}
+
+	public void setPriority(final int priority) {
+		this.priority = priority;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (this.endTime == null ? 0 : this.endTime.hashCode());
 		result = prime * result + (int) (this.id ^ this.id >>> 32);
 		result = prime * result + (this.name == null ? 0 : this.name.hashCode());
+		result = prime * result + this.priority;
+		result = prime * result + (this.startTime == null ? 0 : this.startTime.hashCode());
 		result = prime * result + this.version;
 		return result;
 	}
@@ -97,6 +110,13 @@ public class Task {
 			return false;
 		}
 		final Task other = (Task) obj;
+		if (this.endTime == null) {
+			if (other.endTime != null) {
+				return false;
+			}
+		} else if (!this.endTime.equals(other.endTime)) {
+			return false;
+		}
 		if (this.id != other.id) {
 			return false;
 		}
@@ -105,6 +125,16 @@ public class Task {
 				return false;
 			}
 		} else if (!this.name.equals(other.name)) {
+			return false;
+		}
+		if (this.priority != other.priority) {
+			return false;
+		}
+		if (this.startTime == null) {
+			if (other.startTime != null) {
+				return false;
+			}
+		} else if (!this.startTime.equals(other.startTime)) {
 			return false;
 		}
 		if (this.version != other.version) {
@@ -117,4 +147,25 @@ public class Task {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+
+	@Override
+	public int compareTo(final Task task) {
+
+		if (this.equals(task)) {
+			return 0;
+		}
+
+		if (this.priority == task.priority) {
+			final Duration curDuration = calculateDuration();
+			final Duration taskDuration = task.calculateDuration();
+			return curDuration.compareTo(taskDuration);
+		} else {
+			return this.priority > task.priority ? 1 : -1;
+		}
+	}
+
+	private Duration calculateDuration() {
+		return Duration.between(this.startTime, this.endTime);
+	}
+
 }

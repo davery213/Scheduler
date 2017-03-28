@@ -17,6 +17,7 @@ public class TaskService {
 	public Task createNewTask(final String taskName, final int version) {
 		final Task task = new Task(taskName, version);
 		return this.taskDao.save(task);
+
 	}
 
 	public Task createNewTaskJson(final Task task) {

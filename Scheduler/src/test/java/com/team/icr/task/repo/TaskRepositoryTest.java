@@ -35,6 +35,7 @@ public class TaskRepositoryTest {
 		final LocalDateTime start = LocalDateTime.now();
 		task.setStartTime(start);
 		task.setEndTime(start.plusMinutes(20));
+		task.setPriority(115);
 
 		return task;
 	}

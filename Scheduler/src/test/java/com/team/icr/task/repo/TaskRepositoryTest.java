@@ -1,9 +1,9 @@
 package com.team.icr.task.repo;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,52 +13,44 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.team.icr.task.entity.Task;
+import com.team.icr.util.TaskCreator;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TaskRepositoryTest {
 
-	private static final String TASK_NAME = "Golf";
-
 	@Autowired
-	private TaskRepository taskDao;
+	private TaskRepository taskRepo;
 
 	@Before
 	public void setup() {
 		cleanupTaskTable();
 	}
 
-	private Task createTask(final int version) {
-		final Task task = new Task();
-		task.setName(TASK_NAME);
-		task.setVersion(version);
-		final LocalDateTime start = LocalDateTime.now();
-		task.setStartTime(start);
-		task.setEndTime(start.plusMinutes(20));
-		task.setPriority(115);
-
-		return task;
+	@After
+	public void tearDown() {
+		cleanupTaskTable();
 	}
 
 	private void cleanupTaskTable() {
-		this.taskDao.deleteAll();
+		this.taskRepo.deleteAll();
 	}
 
 	@Test
 	public void testInsertTask() {
-		final Task task = createTask(1);
-		final Task newTask = this.taskDao.save(task);
+		final Task task = TaskCreator.createTask(1);
+		final Task newTask = this.taskRepo.save(task);
 
 		Assert.assertNotEquals("Id was not generated!", 0, newTask.getId());
 	}
 
 	@Test
 	public void testDeleteTask() {
-		final Task task = createTask(1);
-		final Task newTask = this.taskDao.save(task);
+		final Task task = TaskCreator.createTask(1);
+		final Task newTask = this.taskRepo.save(task);
 
-		this.taskDao.delete(newTask);
-		final boolean hasElements = this.taskDao.findAll()
+		this.taskRepo.delete(newTask);
+		final boolean hasElements = this.taskRepo.findAll()
 				.iterator()
 				.hasNext();
 
@@ -67,11 +59,11 @@ public class TaskRepositoryTest {
 
 	@Test
 	public void testFindTaskByTaskName() {
-		final Task task1 = createTask(1);
-		final Task task2 = createTask(2);
-		this.taskDao.save(Arrays.asList(task1, task2));
+		final Task task1 = TaskCreator.createTask(1);
+		final Task task2 = TaskCreator.createTask(2);
+		this.taskRepo.save(Arrays.asList(task1, task2));
 
-		final List<Task> tasks = this.taskDao.findByNameOrderByVersionDesc(TASK_NAME);
+		final List<Task> tasks = this.taskRepo.findByNameOrderByVersionDesc(TaskCreator.TASK_NAME);
 
 		Assert.assertTrue("tasks is empty!", !tasks.isEmpty());
 	}

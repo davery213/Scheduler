@@ -1,7 +1,6 @@
 package com.team.icr.common.time;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,13 +8,13 @@ import org.junit.Test;
 
 public class IntervalTest {
 
-	private ZonedDateTime start;
-	private ZonedDateTime end;
+	private LocalDateTime start;
+	private LocalDateTime end;
 	private Interval intvl1;
 
 	@Before
 	public void setup() {
-		this.start = ZonedDateTime.now(ZoneOffset.UTC);
+		this.start = LocalDateTime.now();
 		this.end = this.start.plusMinutes(10);
 		this.intvl1 = Interval.create(this.start, this.end);
 	}
@@ -70,35 +69,35 @@ public class IntervalTest {
 
 	@Test
 	public void testContainsTime() {
-		final ZonedDateTime time = this.start.plusMinutes(1);
+		final LocalDateTime time = this.start.plusMinutes(1);
 
 		Assert.assertTrue("The time is not contained!", this.intvl1.containsTime(time));
 	}
 
 	@Test
 	public void testEqualStartContainsTime() {
-		final ZonedDateTime time = this.start;
+		final LocalDateTime time = this.start;
 
 		Assert.assertTrue("The time is not contained!", this.intvl1.containsTime(time));
 	}
 
 	@Test
 	public void testEqualEndContainsTime() {
-		final ZonedDateTime time = this.end;
+		final LocalDateTime time = this.end;
 
 		Assert.assertTrue("The time is not contained!", this.intvl1.containsTime(time));
 	}
 
 	@Test
 	public void testFailStartContainsTime() {
-		final ZonedDateTime time = this.start.minusNanos(1);
+		final LocalDateTime time = this.start.minusNanos(1);
 
 		Assert.assertTrue("The time is contained!", !this.intvl1.containsTime(time));
 	}
 
 	@Test
 	public void testFailEndContainsTime() {
-		final ZonedDateTime time = this.end.plusNanos(1);
+		final LocalDateTime time = this.end.plusNanos(1);
 
 		Assert.assertTrue("The time is contained!", !this.intvl1.containsTime(time));
 	}
